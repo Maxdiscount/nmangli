@@ -1,3 +1,70 @@
 {
-  "placeholderImages": []
+  "placeholderImages": [
+    {
+      "id": "tomato",
+      "description": "Fresh red tomatoes",
+      "imageUrl": "https://images.unsplash.com/photo-1601886116356-08c2480e225e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHx0b21hdG8lMjB2ZWdldGFibGV8ZW58MHx8fHwxNzY5NDQ3NjA5fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "tomato vegetable"
+    },
+    {
+      "id": "potato",
+      "description": "Farm fresh potatoes",
+      "imageUrl": "https://images.unsplash.com/photo-1714383611474-e50c6725ce93?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHxwb3RhdG8lMjB2ZWdldGFibGV8ZW58MHx8fHwxNzY5NDQ3NjA5fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "potato vegetable"
+    },
+    {
+      "id": "onion",
+      "description": "Crisp onions",
+      "imageUrl": "https://images.unsplash.com/photo-1711183290232-df6dcf5f0bc9?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHxvbmlvbiUyMHZlZ2V0YWJsZXxlbnwwfHx8fDE3Njk0NDc2MTB8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "onion vegetable"
+    },
+    {
+      "id": "spinach",
+      "description": "Green spinach bunch",
+      "imageUrl": "https://images.unsplash.com/photo-1653842648037-2e449847a78d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxzcGluYWNoJTIwbGVhZnl8ZW58MHx8fHwxNzY5NDQ3NjEwfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "spinach leafy"
+    },
+    {
+      "id": "apple",
+      "description": "Juicy red apples",
+      "imageUrl": "https://images.unsplash.com/photo-1619546813926-a78fa6372cd2?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxhcHBsZSUyMGZydWl0fGVufDB8fHx8MTc2OTM3OTYzM3ww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "apple fruit"
+    },
+    {
+      "id": "banana",
+      "description": "Ripe bananas",
+      "imageUrl": "https://images.unsplash.com/photo-1695004310230-edf1cb00f321?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxiYW5hbmElMjBmcnVpdHxlbnwwfHx8fDE3Njk0MzM5NTZ8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "banana fruit"
+    },
+    {
+      "id": "milk",
+      "description": "Fresh milk packet",
+      "imageUrl": "https://images.unsplash.com/photo-1625055930088-4424bb0806dd?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxMHx8bWlsayUyMGRhaXJ5fGVufDB8fHx8MTc2OTQ0NzYxMHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "milk dairy"
+    },
+    {
+      "id": "bread",
+      "description": "Whole wheat bread",
+      "imageUrl": "https://images.unsplash.com/photo-1612098710010-0c299c573163?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxMHx8YnJlYWQlMjBiYWtlcnl8ZW58MHx8fHwxNzY5NDMyMTAwfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "bread bakery"
+    },
+    {
+      "id": "eggs",
+      "description": "Farm eggs",
+      "imageUrl": "https://images.unsplash.com/photo-1588083402307-ad42a3870779?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxMHx8ZWdncyUyMGRhaXJ5fGVufDB8fHx8MTc2OTQ0NzYwOXww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "eggs dairy"
+    },
+    {
+      "id": "carrot",
+      "description": "Fresh carrots",
+      "imageUrl": "https://images.unsplash.com/photo-1737402710058-0ce100f79b34?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxjYXJyb3QlMjB2ZWdldGFibGV8ZW58MHx8fHwxNzY5NDQ3NjA5fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "carrot vegetable"
+    },
+    {
+      "id": "invalid-image",
+      "description": "This is a product with an invalid image url",
+      "imageUrl": "https://example.com/invalid.jpg",
+      "imageHint": "test invalid"
+    }
+  ]
 }
