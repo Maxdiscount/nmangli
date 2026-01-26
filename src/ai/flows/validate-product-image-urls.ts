@@ -96,20 +96,7 @@ const validateProductImageUrlsFlow = ai.defineFlow(
     outputSchema: ValidateProductImageUrlsOutputSchema,
   },
   async input => {
-    const results: ValidateProductImageUrlsOutput = [];
-
-    for (const product of input) {
-      const {id, imageUrl} = product;
-      const {isValid, reason} = await checkImageUrl(imageUrl);
-
-      results.push({
-        id,
-        isValid,
-        reason,
-      });
-    }
-
-    // const {output} = await validateProductImageUrlsPrompt(input);
-    return results;
+    const {output} = await validateProductImageUrlsPrompt(input);
+    return output || [];
   }
 );
