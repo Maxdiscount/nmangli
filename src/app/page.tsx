@@ -69,6 +69,17 @@ function Storefront() {
       <Header />
 
       <main className="container py-4">
+        <div className="mb-4 text-center text-sm text-muted-foreground bg-card border p-4 rounded-xl shadow-sm">
+          <p className="font-semibold text-foreground mb-2">Delivery available only in <span className="text-primary">Karimnagar (505001)</span></p>
+          <div className="flex items-center justify-center flex-wrap gap-x-4 gap-y-1 text-xs">
+            <span>🚚 Free delivery on orders over ₹300</span>
+            <span className="hidden sm:inline text-muted-foreground/50">•</span>
+            <span>📦 Maximum order limit ₹2000</span>
+            <span className="hidden sm:inline text-muted-foreground/50">•</span>
+            <span>⚡ Orders delivered in 1-2 hours</span>
+          </div>
+        </div>
+
         <div className="flex flex-col sm:flex-row gap-3 mb-4">
           <div className="relative flex-1">
             <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
