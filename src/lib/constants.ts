@@ -10,5 +10,5 @@ export const ORDER_START_HOUR = 8; // 8:00 AM
 export const ORDER_END_HOUR = 20; // 8:00 PM
 
 // Delivery Information
-export const DELIVERY_CHARGE = 20;
+export const DELIVERY_CHARGE = 30;
 export const FREE_DELIVERY_THRESHOLD = 500;
