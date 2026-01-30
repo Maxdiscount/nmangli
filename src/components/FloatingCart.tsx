@@ -23,8 +23,8 @@ export function FloatingCart({
   let buttonText = 'Proceed to Checkout';
   let buttonDisabled = false;
   if (isAfterOrderHours) {
-    buttonText = "Order hours have ended for today";
-    buttonDisabled = true;
+    // We still allow ordering, but it will be for the next day.
+    // The button remains enabled.
   } else if (!isWithinOrderHours) {
     buttonText = "We're currently closed";
     buttonDisabled = true;

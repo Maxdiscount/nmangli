@@ -7,7 +7,7 @@ export const WHATSAPP_NUMBER = "911234567890"; // Replace with your WhatsApp Bus
 
 // Order Timings (24-hour format, local time)
 export const ORDER_START_HOUR = 8; // 8:00 AM
-export const ORDER_END_HOUR = 22; // 10:00 PM
+export const ORDER_END_HOUR = 20; // 8:00 PM
 
 // Delivery Information
 export const DELIVERY_CHARGE = 20;

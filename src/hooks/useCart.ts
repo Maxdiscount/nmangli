@@ -104,6 +104,10 @@ export function useCart() {
     const orderDetails = cart.map(item => 
       `${item.name} - ${item.quantity} ${item.unit} x ₹${item.price} = ₹${(item.price * item.quantity).toFixed(2)}`
     ).join('\n');
+    
+    const afterHoursMessage = isAfterOrderHours()
+      ? `\n-----------------------------------\n*This is an after-hours order and will be delivered tomorrow morning.*`
+      : '';
 
     const message = `
 Hello ${STORE_NAME}, I'd like to place an order:
@@ -112,7 +116,7 @@ ${orderDetails}
 -----------------------------------
 Subtotal: ₹${subtotal.toFixed(2)}
 Delivery: ₹${deliveryCharge.toFixed(2)}
-*Total: ₹${total.toFixed(2)}*
+*Total: ₹${total.toFixed(2)}*${afterHoursMessage}
 
 Thank you!
     `;
@@ -122,7 +126,7 @@ Thank you!
     
     window.open(whatsappUrl, '_blank');
     clearCart();
-  }, [cart, subtotal, deliveryCharge, total, clearCart]);
+  }, [cart, subtotal, deliveryCharge, total, clearCart, isAfterOrderHours]);
 
   const [hasLastOrder, setHasLastOrder] = useState(false);
   useEffect(() => {

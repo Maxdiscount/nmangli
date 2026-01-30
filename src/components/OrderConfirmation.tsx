@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import { Trash2, X } from 'lucide-react';
+import { Trash2, X, Info } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -92,10 +92,11 @@ export function OrderConfirmation({
 
         {isAfterOrderHours && (
             <div className="px-6">
-                <Alert variant="destructive">
-                    <AlertTitle>Ordering Closed</AlertTitle>
+                <Alert>
+                    <Info className="h-4 w-4" />
+                    <AlertTitle>After-hours Order</AlertTitle>
                     <AlertDescription>
-                    We are closed for the day. Your order will be scheduled for tomorrow.
+                    Your order will be delivered tomorrow morning.
                     </AlertDescription>
                 </Alert>
             </div>
