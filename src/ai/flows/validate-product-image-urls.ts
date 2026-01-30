@@ -48,7 +48,7 @@ const checkImageUrl = ai.defineTool({
     isValid: z.boolean().describe('Whether the image URL is valid.'),
     reason: z.string().optional().describe('The reason why the image URL is invalid, if applicable.'),
   }),
-  async (imageUrl: string) => {
+}, async (imageUrl: string) => {
     try {
       const response = await fetch(imageUrl, {method: 'HEAD'});
       if (!response.ok) {
@@ -73,8 +73,7 @@ const checkImageUrl = ai.defineTool({
         reason: `Error checking image URL: ${error.message}`,
       };
     }
-  },
-});
+  });
 
 const validateProductImageUrlsPrompt = ai.definePrompt({
   name: 'validateProductImageUrlsPrompt',
