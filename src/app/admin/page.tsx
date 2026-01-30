@@ -47,6 +47,9 @@ function AdminPanel() {
     toggleCategoryEnabled,
     addCategory,
   } = useProductStore();
+  
+  const sortedProducts = useMemo(() => [...productList].sort((a,b) => a.name.localeCompare(b.name)), [productList]);
+  const sortedCategories = useMemo(() => [...categoryList].filter(c => c.id !== 'all').sort((a,b) => a.name.localeCompare(b.name)), [categoryList]);
 
   const [editingProduct, setEditingProduct] = useState<string | null>(null);
   const [editPrice, setEditPrice] = useState('');
@@ -177,9 +180,6 @@ function AdminPanel() {
       </div>
     );
   }
-
-  const sortedProducts = useMemo(() => [...productList].sort((a,b) => a.name.localeCompare(b.name)), [productList]);
-  const sortedCategories = useMemo(() => [...categoryList].filter(c => c.id !== 'all').sort((a,b) => a.name.localeCompare(b.name)), [categoryList]);
 
   return (
     <div className="min-h-screen bg-background">
