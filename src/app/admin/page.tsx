@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useMemo, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { Lock, Package, Tags, ClipboardList, LogOut, Plus, Trash2, Edit2, Check, X, Upload, Sparkles, AlertCircle, CheckCircle, HelpCircle } from 'lucide-react';
+import { Lock, Package, Tags, ClipboardList, LogOut, Plus, Trash2, Edit2, Check, X, Sparkles, AlertCircle, CheckCircle, HelpCircle } from 'lucide-react';
 import { ADMIN_PASSWORD } from '@/lib/constants';
 import type { Product, Category } from '@/types';
 import { useProductStore } from '@/hooks/useProductStore';
@@ -130,6 +130,19 @@ function AdminPanel() {
       toast({ variant: 'destructive', title: 'Category exists', description: 'This category name is already taken.' });
     }
   };
+  
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setNewProduct({ ...newProduct, image: reader.result as string });
+      };
+      reader.readAsDataURL(file);
+    } else {
+      setNewProduct({ ...newProduct, image: "" });
+    }
+  };
 
   const handleValidateImages = async () => {
     setIsValidating(true);
@@ -242,9 +255,21 @@ function AdminPanel() {
                         {categoryList.filter(c => c.id !== 'all').map(cat => <SelectItem key={cat.id} value={cat.id}>{cat.name}</SelectItem>)}
                       </SelectContent>
                     </Select>
-                    <div className="md:col-span-2">
-                      <Input placeholder="Image URL" value={newProduct.image} onChange={(e) => setNewProduct({ ...newProduct, image: e.target.value })} />
-                      <p className="text-xs text-muted-foreground mt-1 flex items-center"><Upload className="w-3 h-3 inline mr-1" /> For now, use publicly accessible image URLs.</p>
+                    <div className="md:col-span-2 space-y-2">
+                      <Label htmlFor="image-upload">Product Image</Label>
+                      <Input 
+                          id="image-upload" 
+                          type="file" 
+                          accept="image/*" 
+                          onChange={handleImageUpload} 
+                          className="file:text-primary file:font-medium"
+                      />
+                      {newProduct.image && (
+                      <div className="mt-2">
+                          <p className="text-xs text-muted-foreground mb-2">Image Preview:</p>
+                          <Image src={newProduct.image} alt="New product preview" width={80} height={80} className="rounded-lg object-cover bg-muted" />
+                      </div>
+                      )}
                     </div>
                   </div>
                 </CardContent>
