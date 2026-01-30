@@ -2,11 +2,10 @@
 
 import { useState, useEffect, useMemo, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { Lock, Package, Tags, ClipboardList, LogOut, Plus, Trash2, Edit2, Check, X, Sparkles, AlertCircle, CheckCircle, HelpCircle } from 'lucide-react';
+import { Lock, Package, Tags, ClipboardList, LogOut, Plus, Trash2, Edit2, Check, X } from 'lucide-react';
 import { ADMIN_PASSWORD } from '@/lib/constants';
 import type { Product, Category } from '@/types';
 import { useProductStore } from '@/hooks/useProductStore';
-import { validateProductImageUrls, ValidateProductImageUrlsOutput } from '@/ai/flows/validate-product-image-urls';
 import { useToast } from '@/hooks/use-toast';
 
 import { Button } from '@/components/ui/button';
@@ -15,15 +14,8 @@ import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Badge } from '@/components/ui/badge';
 import Image from 'next/image';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip"
 
 type Tab = 'products' | 'categories' | 'orders';
 
@@ -31,11 +23,6 @@ function AdminPanel() {
   const searchParams = useSearchParams();
   const isDeliveryMode = searchParams.get('delivery') === 'true';
   const { toast } = useToast();
-
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
-  const [activeTab, setActiveTab] = useState<Tab>(isDeliveryMode ? 'orders' : 'products');
 
   const {
     products: productList,
@@ -50,6 +37,11 @@ function AdminPanel() {
   
   const sortedProducts = useMemo(() => [...productList].sort((a,b) => a.name.localeCompare(b.name)), [productList]);
   const sortedCategories = useMemo(() => [...categoryList].filter(c => c.id !== 'all').sort((a,b) => a.name.localeCompare(b.name)), [categoryList]);
+  
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const [activeTab, setActiveTab] = useState<Tab>(isDeliveryMode ? 'orders' : 'products');
 
   const [editingProduct, setEditingProduct] = useState<string | null>(null);
   const [editPrice, setEditPrice] = useState('');
@@ -62,9 +54,6 @@ function AdminPanel() {
     category: 'vegetables',
     image: '',
   });
-
-  const [validationStatus, setValidationStatus] = useState<ValidateProductImageUrlsOutput>([]);
-  const [isValidating, setIsValidating] = useState(false);
 
   useEffect(() => {
     if (sessionStorage.getItem('admin-authenticated') === 'true') {
@@ -144,26 +133,6 @@ function AdminPanel() {
     }
   };
 
-  const handleValidateImages = async () => {
-    setIsValidating(true);
-    const productsToValidate = productList.map(p => ({ id: p.id, imageUrl: p.image }));
-    try {
-      const results = await validateProductImageUrls(productsToValidate);
-      setValidationStatus(results);
-      const invalidCount = results.filter(r => !r.isValid).length;
-      if (invalidCount > 0) {
-        toast({ variant: 'destructive', title: 'Validation Complete', description: `${invalidCount} invalid image URLs found.` });
-      } else {
-        toast({ title: 'Validation Complete', description: 'All image URLs are valid!' });
-      }
-    } catch (e) {
-      console.error(e);
-      toast({ variant: 'destructive', title: 'Validation Failed', description: 'An error occurred during validation.' });
-    } finally {
-      setIsValidating(false);
-    }
-  };
-
   if (!isAuthenticated) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center p-4">
@@ -226,10 +195,6 @@ function AdminPanel() {
             <div className="flex flex-wrap items-center justify-between gap-4 mb-4">
               <h2 className="text-2xl font-semibold">Products ({productList.length})</h2>
               <div className="flex gap-2">
-                <Button onClick={handleValidateImages} variant="outline" disabled={isValidating}>
-                  <Sparkles className={`w-4 h-4 mr-2 ${isValidating ? 'animate-spin' : ''}`} />
-                  {isValidating ? 'Validating...' : 'Validate Images'}
-                </Button>
                 <Button onClick={() => setShowAddProduct(!showAddProduct)}>
                   <Plus className="w-4 h-4 mr-2" /> Add Product
                 </Button>
@@ -281,27 +246,11 @@ function AdminPanel() {
             )}
 
             <div className="space-y-3">
-              {sortedProducts.map(product => {
-                const status = validationStatus.find(s => s.id === product.id);
-                return (
+              {sortedProducts.map(product => (
                   <Card key={product.id} className={`transition-opacity ${!product.enabled ? 'opacity-50' : ''}`}>
                     <CardContent className="p-4 flex items-center gap-4">
                         <div className="relative">
                             <Image src={product.image} alt={product.name} width={64} height={64} className="rounded-lg object-cover bg-muted" />
-                            {status && (
-                                <TooltipProvider>
-                                <Tooltip>
-                                    <TooltipTrigger asChild>
-                                        <span className="absolute -top-1 -right-1">
-                                            {status.isValid ? <CheckCircle className="w-5 h-5 text-green-500 bg-white rounded-full" /> : <AlertCircle className="w-5 h-5 text-red-500 bg-white rounded-full" />}
-                                        </span>
-                                    </TooltipTrigger>
-                                    <TooltipContent>
-                                        <p>{status.isValid ? 'Image URL is valid' : `Invalid: ${status.reason}`}</p>
-                                    </TooltipContent>
-                                </Tooltip>
-                                </TooltipProvider>
-                            )}
                         </div>
 
                       <div className="flex-1">
@@ -331,7 +280,7 @@ function AdminPanel() {
                       </div>
                     </CardContent>
                   </Card>
-                )})}
+                ))}
             </div>
           </div>
         )}
