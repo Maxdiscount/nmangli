@@ -19,15 +19,19 @@ export function useCart() {
   const [cart, setCart] = useState<CartItem[]>([]);
   const [isInitialized, setIsInitialized] = useState(false);
   const { toast } = useToast();
+  const [isClient, setIsClient] = useState(false);
+  const [hasLastOrder, setHasLastOrder] = useState(false);
 
   useEffect(() => {
+    setIsClient(true);
     try {
       const storedCart = localStorage.getItem(CART_KEY);
       if (storedCart) {
         setCart(JSON.parse(storedCart));
       }
+      setHasLastOrder(!!localStorage.getItem(LAST_ORDER_KEY));
     } catch (e) {
-      console.error('Failed to parse stored cart:', e);
+      console.error('Failed to parse stored items:', e);
     }
     setIsInitialized(true);
   }, []);
@@ -85,21 +89,24 @@ export function useCart() {
   const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
 
   const isWithinOrderHours = useCallback(() => {
+    if (!isClient) return true; // On server and initial client render, assume it's within hours
     const now = new Date();
     const currentHour = now.getHours();
     return currentHour >= ORDER_START_HOUR && currentHour < ORDER_END_HOUR;
-  }, []);
+  }, [isClient]);
 
   const isAfterOrderHours = useCallback(() => {
+    if (!isClient) return false; // On server and initial client render, assume it's not after hours
     const now = new Date();
     const currentHour = now.getHours();
     return currentHour >= ORDER_END_HOUR;
-  }, []);
+  }, [isClient]);
 
   const openWhatsAppCheckout = useCallback(() => {
     if (cart.length === 0) return;
 
     localStorage.setItem(LAST_ORDER_KEY, JSON.stringify(cart));
+    setHasLastOrder(true);
 
     const orderDetails = cart.map(item => 
       `${item.name} - ${item.quantity} ${item.unit} x ₹${item.price} = ₹${(item.price * item.quantity).toFixed(2)}`
@@ -133,19 +140,18 @@ Thank you!
     clearCart();
   }, [cart, subtotal, deliveryCharge, total, clearCart, isAfterOrderHours]);
 
-  const [hasLastOrder, setHasLastOrder] = useState(false);
-  useEffect(() => {
-    setHasLastOrder(!!localStorage.getItem(LAST_ORDER_KEY));
-  }, [cart]);
-
   const repeatLastOrder = useCallback(() => {
     const lastOrder = localStorage.getItem(LAST_ORDER_KEY);
     if (lastOrder) {
-      setCart(JSON.parse(lastOrder));
-      toast({
-        title: 'Last order repeated',
-        description: 'Your previous order has been added to your cart.',
-      });
+      try {
+        setCart(JSON.parse(lastOrder));
+        toast({
+          title: 'Last order repeated',
+          description: 'Your previous order has been added to your cart.',
+        });
+      } catch (e) {
+        console.error('Failed to parse last order:', e);
+      }
     }
   }, [toast]);
 
