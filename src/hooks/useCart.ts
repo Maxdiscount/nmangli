@@ -118,6 +118,11 @@ Subtotal: ₹${subtotal.toFixed(2)}
 Delivery: ₹${deliveryCharge.toFixed(2)}
 *Total: ₹${total.toFixed(2)}*${afterHoursMessage}
 
+-----------------------------------
+*Please send:*
+1. Full delivery address
+2. Live Google Maps location
+
 Thank you!
     `;
 

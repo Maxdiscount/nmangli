@@ -88,6 +88,9 @@ export function OrderConfirmation({
             <span>Total</span>
             <span>₹{total.toFixed(2)}</span>
           </div>
+          <p className="text-xs text-muted-foreground pt-2 italic">
+            *Please send:*<br/>1. Full delivery address<br/>2. Live Google Maps location
+          </p>
         </div>
 
         {isAfterOrderHours && (
