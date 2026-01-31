@@ -1,5 +1,5 @@
 // This is a mock password. In a real application, use a secure authentication system.
-export const ADMIN_PASSWORD = "admin";
+export const ADMIN_PASSWORD = "Jumbopack@1137";
 
 // Store Information
 export const STORE_NAME = "Mangli.Store";
