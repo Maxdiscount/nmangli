@@ -7,46 +7,43 @@ import { products as initialProducts, categories as initialCategories } from '@/
 const PRODUCTS_KEY = 'mangli-products';
 const CATEGORIES_KEY = 'mangli-categories';
 
+const getStoredData = <T,>(key: string, fallback: T): T => {
+  if (typeof window === 'undefined') {
+    return fallback;
+  }
+  try {
+    const stored = localStorage.getItem(key);
+    return stored ? JSON.parse(stored) : fallback;
+  } catch (e) {
+    console.error(`Failed to parse stored data for key "${key}":`, e);
+    // If parsing fails, it's safer to reset to the default state.
+    localStorage.removeItem(key);
+    return fallback;
+  }
+};
+
 export function useProductStore() {
-  const [isInitialized, setIsInitialized] = useState(false);
-  const [products, setProducts] = useState<Product[]>(initialProducts);
-  const [categories, setCategories] = useState<Category[]>(initialCategories);
+  const [products, setProducts] = useState<Product[]>(() => getStoredData(PRODUCTS_KEY, initialProducts));
+  const [categories, setCategories] = useState<Category[]>(() => getStoredData(CATEGORIES_KEY, initialCategories));
 
+  // Effect to write 'products' to localStorage whenever it changes.
   useEffect(() => {
-    try {
-      const storedProducts = localStorage.getItem(PRODUCTS_KEY);
-      if (storedProducts) {
-        setProducts(JSON.parse(storedProducts));
-      }
-      const storedCategories = localStorage.getItem(CATEGORIES_KEY);
-      if (storedCategories) {
-        setCategories(JSON.parse(storedCategories));
-      }
-    } catch (e) {
-      console.error('Failed to parse stored data:', e);
-    }
-    setIsInitialized(true);
-  }, []);
+    localStorage.setItem(PRODUCTS_KEY, JSON.stringify(products));
+  }, [products]);
   
+  // Effect to write 'categories' to localStorage whenever it changes.
   useEffect(() => {
-    if (isInitialized) {
-      localStorage.setItem(PRODUCTS_KEY, JSON.stringify(products));
-    }
-  }, [products, isInitialized]);
-  
-  useEffect(() => {
-    if (isInitialized) {
-      localStorage.setItem(CATEGORIES_KEY, JSON.stringify(categories));
-    }
-  }, [categories, isInitialized]);
+    localStorage.setItem(CATEGORIES_KEY, JSON.stringify(categories));
+  }, [categories]);
 
+  // Effect to listen for storage changes from other tabs.
   useEffect(() => {
     const handleStorageChange = (e: StorageEvent) => {
-      if (e.key === PRODUCTS_KEY && e.newValue) {
-        setProducts(JSON.parse(e.newValue));
+      if (e.key === PRODUCTS_KEY) {
+        setProducts(getStoredData(PRODUCTS_KEY, initialProducts));
       }
-      if (e.key === CATEGORIES_KEY && e.newValue) {
-        setCategories(JSON.parse(e.newValue));
+      if (e.key === CATEGORIES_KEY) {
+        setCategories(getStoredData(CATEGORIES_KEY, initialCategories));
       }
     };
 
