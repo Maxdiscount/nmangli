@@ -23,21 +23,15 @@ const getStoredData = <T,>(key: string, fallback: T): T => {
 };
 
 export function useProductStore() {
-  const [products, setProducts] = useState<Product[]>(() => getStoredData(PRODUCTS_KEY, initialProducts));
-  const [categories, setCategories] = useState<Category[]>(() => getStoredData(CATEGORIES_KEY, initialCategories));
+  const [products, setProducts] = useState<Product[]>(initialProducts);
+  const [categories, setCategories] = useState<Category[]>(initialCategories);
 
-  // Effect to write 'products' to localStorage whenever it changes.
+  // This effect runs only on the client, after initial render
   useEffect(() => {
-    localStorage.setItem(PRODUCTS_KEY, JSON.stringify(products));
-  }, [products]);
-  
-  // Effect to write 'categories' to localStorage whenever it changes.
-  useEffect(() => {
-    localStorage.setItem(CATEGORIES_KEY, JSON.stringify(categories));
-  }, [categories]);
+    // Now we can safely get data from localStorage and update state
+    setProducts(getStoredData(PRODUCTS_KEY, initialProducts));
+    setCategories(getStoredData(CATEGORIES_KEY, initialCategories));
 
-  // Effect to listen for storage changes from other tabs.
-  useEffect(() => {
     const handleStorageChange = (e: StorageEvent) => {
       if (e.key === PRODUCTS_KEY) {
         setProducts(getStoredData(PRODUCTS_KEY, initialProducts));
@@ -50,6 +44,21 @@ export function useProductStore() {
     window.addEventListener('storage', handleStorageChange);
     return () => window.removeEventListener('storage', handleStorageChange);
   }, []);
+
+  // Effect to write 'products' to localStorage whenever it changes.
+  useEffect(() => {
+    // We need to check if we are on the client before writing to localStorage
+    if (typeof window !== 'undefined') {
+      localStorage.setItem(PRODUCTS_KEY, JSON.stringify(products));
+    }
+  }, [products]);
+  
+  // Effect to write 'categories' to localStorage whenever it changes.
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem(CATEGORIES_KEY, JSON.stringify(categories));
+    }
+  }, [categories]);
 
   const toggleProductEnabled = useCallback((productId: string) => {
     setProducts(prev =>
