@@ -3,10 +3,10 @@
 import { useState, useEffect, useCallback } from 'react';
 import type { Product, CartItem } from '@/types';
 import { useToast } from '@/hooks/use-toast';
-import { 
-  WHATSAPP_NUMBER, 
-  STORE_NAME, 
-  ORDER_START_HOUR, 
+import {
+  WHATSAPP_NUMBER,
+  STORE_NAME,
+  ORDER_START_HOUR,
   ORDER_END_HOUR,
   DELIVERY_CHARGE,
   FREE_DELIVERY_THRESHOLD
@@ -19,11 +19,19 @@ export function useCart() {
   const [cart, setCart] = useState<CartItem[]>([]);
   const [isInitialized, setIsInitialized] = useState(false);
   const { toast } = useToast();
-  const [isClient, setIsClient] = useState(false);
   const [hasLastOrder, setHasLastOrder] = useState(false);
+
+  // State for time-based checks to avoid hydration errors
+  const [isWithinOrderHours, setIsWithinOrderHours] = useState(false);
+  const [isAfterOrderHours, setIsAfterOrderHours] = useState(false);
+  const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
     setIsClient(true);
+  }, []);
+
+  useEffect(() => {
+    if (!isClient) return;
     try {
       const storedCart = localStorage.getItem(CART_KEY);
       if (storedCart) {
@@ -33,8 +41,14 @@ export function useCart() {
     } catch (e) {
       console.error('Failed to parse stored items:', e);
     }
+    
+    const now = new Date();
+    const currentHour = now.getHours();
+    setIsWithinOrderHours(currentHour >= ORDER_START_HOUR && currentHour < ORDER_END_HOUR);
+    setIsAfterOrderHours(currentHour >= ORDER_END_HOUR);
+
     setIsInitialized(true);
-  }, []);
+  }, [isClient]);
 
   useEffect(() => {
     if (isInitialized) {
@@ -88,31 +102,17 @@ export function useCart() {
   const total = subtotal + deliveryCharge;
   const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
 
-  const isWithinOrderHours = useCallback(() => {
-    if (!isClient) return true; // On server and initial client render, assume it's within hours
-    const now = new Date();
-    const currentHour = now.getHours();
-    return currentHour >= ORDER_START_HOUR && currentHour < ORDER_END_HOUR;
-  }, [isClient]);
-
-  const isAfterOrderHours = useCallback(() => {
-    if (!isClient) return false; // On server and initial client render, assume it's not after hours
-    const now = new Date();
-    const currentHour = now.getHours();
-    return currentHour >= ORDER_END_HOUR;
-  }, [isClient]);
-
   const openWhatsAppCheckout = useCallback(() => {
     if (cart.length === 0) return;
 
     localStorage.setItem(LAST_ORDER_KEY, JSON.stringify(cart));
     setHasLastOrder(true);
 
-    const orderDetails = cart.map(item => 
+    const orderDetails = cart.map(item =>
       `${item.name} - ${item.quantity} ${item.unit} x ₹${item.price} = ₹${(item.price * item.quantity).toFixed(2)}`
     ).join('\n');
-    
-    const afterHoursMessage = isAfterOrderHours()
+
+    const afterHoursMessage = isAfterOrderHours
       ? `\n-----------------------------------\n*This is an after-hours order and will be delivered tomorrow morning.*`
       : '';
 
@@ -135,7 +135,7 @@ Thank you!
 
     const encodedMessage = encodeURIComponent(message.trim());
     const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodedMessage}`;
-    
+
     window.open(whatsappUrl, '_blank');
     clearCart();
   }, [cart, subtotal, deliveryCharge, total, clearCart, isAfterOrderHours]);

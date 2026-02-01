@@ -145,8 +145,8 @@ function Storefront() {
         totalItems={totalItems}
         total={total}
         onCheckout={handleCheckout}
-        isWithinOrderHours={isWithinOrderHours() || isDevMode}
-        isAfterOrderHours={isAfterOrderHours() && !isDevMode}
+        isWithinOrderHours={isWithinOrderHours || isDevMode}
+        isAfterOrderHours={isAfterOrderHours && !isDevMode}
       />
 
       <OrderConfirmation
@@ -159,7 +159,7 @@ function Storefront() {
         onUpdateQuantity={updateQuantity}
         onRemoveItem={removeFromCart}
         onConfirmOrder={handleConfirmOrder}
-        isAfterOrderHours={isAfterOrderHours() && !isDevMode}
+        isAfterOrderHours={isAfterOrderHours && !isDevMode}
       />
     </div>
   );

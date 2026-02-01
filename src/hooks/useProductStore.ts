@@ -23,8 +23,8 @@ const getStoredData = <T,>(key: string, fallback: T): T => {
 };
 
 export function useProductStore() {
-  const [products, setProducts] = useState<Product[]>(initialProducts);
-  const [categories, setCategories] = useState<Category[]>(initialCategories);
+  const [products, setProducts] = useState<Product[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
   const [isInitialized, setIsInitialized] = useState(false);
 
   // This effect runs only on the client, after initial render

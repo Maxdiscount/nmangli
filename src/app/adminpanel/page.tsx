@@ -40,6 +40,7 @@ function AdminPanel() {
   const sortedCategories = useMemo(() => [...categoryList].filter(c => c.id !== 'all').sort((a,b) => a.name.localeCompare(b.name)), [categoryList]);
   
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isClient, setIsClient] = useState(false);
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [activeTab, setActiveTab] = useState<Tab>(isDeliveryMode ? 'orders' : 'products');
@@ -60,6 +61,7 @@ function AdminPanel() {
     if (sessionStorage.getItem('admin-authenticated') === 'true') {
       setIsAuthenticated(true);
     }
+    setIsClient(true);
   }, []);
 
   const handleLogin = (e: React.FormEvent) => {
@@ -134,7 +136,7 @@ function AdminPanel() {
     }
   };
 
-  if (!isInitialized) {
+  if (!isInitialized || !isClient) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center p-4">
         <p>Loading Admin...</p>
