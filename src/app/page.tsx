@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo, Suspense } from 'react';
+import { useState, useMemo, Suspense, useEffect } from 'react';
 import { Search } from 'lucide-react';
 import { useSearchParams } from 'next/navigation';
 import { Header } from '@/components/Header';
@@ -19,7 +19,7 @@ function Storefront() {
   const [searchQuery, setSearchQuery] = useState('');
   const [isOrderDialogOpen, setIsOrderDialogOpen] = useState(false);
 
-  const { enabledProducts, enabledCategories } = useProductStore();
+  const { enabledProducts, enabledCategories, isInitialized: productsInitialized } = useProductStore();
   const searchParams = useSearchParams();
   const isDevMode = searchParams.get('dev') === 'true';
 
@@ -38,6 +38,7 @@ function Storefront() {
     openWhatsAppCheckout,
     repeatLastOrder,
     hasLastOrder,
+    isInitialized: cartInitialized,
   } = useCart();
 
   const handleCheckout = () => {
@@ -63,6 +64,17 @@ function Storefront() {
       return matchesCategory && matchesSearch;
     });
   }, [enabledProducts, selectedCategory, searchQuery]);
+
+  if (!productsInitialized || !cartInitialized) {
+    return (
+      <div className="min-h-screen bg-background pb-40">
+        <Header />
+        <main className="container py-4 text-center">
+          <p>Loading store...</p>
+        </main>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background pb-40">

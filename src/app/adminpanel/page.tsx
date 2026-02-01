@@ -33,6 +33,7 @@ function AdminPanel() {
     deleteProduct,
     toggleCategoryEnabled,
     addCategory,
+    isInitialized,
   } = useProductStore();
   
   const sortedProducts = useMemo(() => [...productList].sort((a,b) => a.name.localeCompare(b.name)), [productList]);
@@ -132,6 +133,14 @@ function AdminPanel() {
       setNewProduct({ ...newProduct, image: "" });
     }
   };
+
+  if (!isInitialized) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center p-4">
+        <p>Loading Admin...</p>
+      </div>
+    );
+  }
 
   if (!isAuthenticated) {
     return (

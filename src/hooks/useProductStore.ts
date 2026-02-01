@@ -25,12 +25,14 @@ const getStoredData = <T,>(key: string, fallback: T): T => {
 export function useProductStore() {
   const [products, setProducts] = useState<Product[]>(initialProducts);
   const [categories, setCategories] = useState<Category[]>(initialCategories);
+  const [isInitialized, setIsInitialized] = useState(false);
 
   // This effect runs only on the client, after initial render
   useEffect(() => {
     // Now we can safely get data from localStorage and update state
     setProducts(getStoredData(PRODUCTS_KEY, initialProducts));
     setCategories(getStoredData(CATEGORIES_KEY, initialCategories));
+    setIsInitialized(true);
 
     const handleStorageChange = (e: StorageEvent) => {
       if (e.key === PRODUCTS_KEY) {
@@ -47,18 +49,18 @@ export function useProductStore() {
 
   // Effect to write 'products' to localStorage whenever it changes.
   useEffect(() => {
-    // We need to check if we are on the client before writing to localStorage
-    if (typeof window !== 'undefined') {
+    // We need to check if we are on the client and initialized before writing to localStorage
+    if (isInitialized) {
       localStorage.setItem(PRODUCTS_KEY, JSON.stringify(products));
     }
-  }, [products]);
+  }, [products, isInitialized]);
   
   // Effect to write 'categories' to localStorage whenever it changes.
   useEffect(() => {
-    if (typeof window !== 'undefined') {
+    if (isInitialized) {
       localStorage.setItem(CATEGORIES_KEY, JSON.stringify(categories));
     }
-  }, [categories]);
+  }, [categories, isInitialized]);
 
   const toggleProductEnabled = useCallback((productId: string) => {
     setProducts(prev =>
@@ -116,5 +118,6 @@ export function useProductStore() {
     deleteProduct,
     toggleCategoryEnabled,
     addCategory,
+    isInitialized,
   };
 }

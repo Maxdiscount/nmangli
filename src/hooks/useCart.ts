@@ -171,5 +171,6 @@ Thank you!
     openWhatsAppCheckout,
     repeatLastOrder,
     hasLastOrder,
+    isInitialized,
   };
 }
