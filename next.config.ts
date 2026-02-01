@@ -1,7 +1,9 @@
-import type {NextConfig} from 'next';
+import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  /* Added for Firebase Static Hosting */
+  output: 'export',
+  
   typescript: {
     ignoreBuildErrors: true,
   },
@@ -9,6 +11,8 @@ const nextConfig: NextConfig = {
     ignoreDuringBuilds: true,
   },
   images: {
+    /* Required for static export */
+    unoptimized: true,
     remotePatterns: [
       {
         protocol: 'https',
